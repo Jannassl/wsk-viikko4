@@ -1,5 +1,6 @@
 
 import express from 'express';
+import multer from 'multer';
 import {
   getUser,
   getUserById,
@@ -7,6 +8,9 @@ import {
   putUser,
   deleteUser,
 } from '../controllers/user-controller.js';
+
+
+const upload = multer({dest : 'uploads/'});
 
 const userRouter = express.Router();
 

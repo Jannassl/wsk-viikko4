@@ -1,5 +1,6 @@
 'use strict'
 import {addUser, findUserById, listAllUsers} from "../models/user-model.js";
+import bcrypt from 'bcrypt';
 
 const getUser = (req, res) => {
   res.json(listAllUsers());
@@ -14,19 +15,20 @@ const getUserById = (req, res) => {
   }
 };
 
-const postUser = (req, res) => {
-  const result = addUser(req.body);
-  if (result.user_id) {
-    res.status(201);
-    res.json({message: 'New user added.', result});
-  } else {
-    res.sendStatus(400);
-  }
+const postUser = async (req, res, next) => {
+  req.body.password = await bcrypt.hash(req.body.password, 10);
+  const newUserId = await addUser(req.body);
+  res.json({message: 'new user added', user_id: newUserId});
 };
 
-const putUser = (req, res) => {
-  res.json({message : ' User item updated'});
-  res.sendStatus(200);
+const putUser = async (req, res) => {
+  if (
+    res.locals.user.user_id !== Number(req.params.id) &&
+    res.locals.user.role !== 'admin'
+  ) {
+    res.sendStatus(403);
+    return;
+  }
 };
 
 const deleteUser = (req, res) => {
