@@ -1,11 +1,12 @@
 import express from 'express';
-import multer from 'multer'; 
+import multer from 'multer';
 import {
   getCat,
   getCatById,
   postCat,
   putCat,
-  deleteCat, 
+  deleteCat,
+  getCatsByUserId,
 } from '../controllers/cat-controller.js';
 
 import { createThumbnail } from '../../middlewares.js';
