@@ -1,4 +1,5 @@
 import {addCat, findCatById, listAllCats} from "../models/cat-model.js";
+import { createThumbnail } from "../../middlewares.js";
 
 const getCat = (req, res) => {
   res.json(listAllCats());
@@ -13,13 +14,17 @@ const getCatById = (req, res) => {
   }
 };
 
-const postCat = (req, res) => {
-  const filename = req.file.filename;
-  const result = addCat(req.body, filename);
-  if (result.cat_id) {
+const postCat = async (req, res) => {
+  if (req.file) {
+    req.body.filename = req.file.filename;
+  }
+  req.body.birthdate = new Date(req.body.birthdate).toISOString().slice(0, 10);
+  const result = await addCat(req.body);
+  console.log(req.body);
+  console.log(req.file);
+  if (result.id) {
     res.status(201);
     res.json({message: 'New cat added.', result});
-    console.log(req.body, req.file);
   } else {
     res.sendStatus(400);
   }
@@ -35,4 +40,4 @@ const deleteCat = (req, res) => {
   res.sendStatus(200);
 };
 
-export {getCat, getCatById, postCat, putCat, deleteCat};
+export {getCat, getCatById, postCat, putCat, deleteCat, createThumbnail};
