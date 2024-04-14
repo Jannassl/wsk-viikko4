@@ -5,7 +5,7 @@ import {
   getCatsByUserId as getCatsByUserIdModel,
   modifyCat,
 } from '../models/cat-model.js';
-import { createThumbnail } from "../../middlewares.js";
+
 
 const getCat = (req, res) => {
   res.json(listAllCats());
@@ -21,7 +21,11 @@ const getCatById = (req, res) => {
 };
 
 const postCat = async (req, res) => {
-  req.body.filename = req.file.filename; // add this line
+  if (req.file) {
+    req.body.filename = req.file.filename;
+  } else {
+    req.body.filename = 'default_filename'; // replace 'default_filename' with an actual default filename
+  }
   req.body.birthdate = new Date(req.body.birthdate).toISOString().slice(0, 10);
   const result = await addCat(req.body);
   console.log(req.body);
