@@ -1,4 +1,7 @@
+// ./src/middlewares.js
+
 import sharp from 'sharp';
+import path from 'path';
 
 const createThumbnail = async (req, res, next) => {
   if (!req.file) {
@@ -15,4 +18,4 @@ const createThumbnail = async (req, res, next) => {
     toFile(`${req.file.path}_thumb`).then(() => { next(); });
 };
 
-export {createThumbnail};
+export { createThumbnail };
